@@ -20,6 +20,13 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
-        launch();
+        Colony colony = new Colony(10, 10);
+        colony.spawnCellAt(2, 2);
+        colony.spawnCellAt(2, 3);
+        colony.spawnCellAt(2, 4);
+        colony.showColony();
+        colony.evolve();
+        colony.showColony();
+        //launch();
     }
 }
