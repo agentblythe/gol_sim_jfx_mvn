@@ -59,6 +59,10 @@ public class Colony {
         return (x < this.width && x >= 0 && y < this.height && y >= 0);
     }
 
+    public boolean cellIsAlive(int x, int y) {
+        return cellIsInColony(x, y) && (colony[x][y].isAlive());
+    }
+
     public void evolve() {
         ArrayList<Cell> cellsToKill = new ArrayList<>();
         ArrayList<Cell> cellsToSpawn = new ArrayList<>();
