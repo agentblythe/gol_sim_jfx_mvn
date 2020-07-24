@@ -12,11 +12,16 @@ import static com.stevenblythe.Constants.*;
 public class MainView extends VBox {
     private Colony colony;
     private Button stepForwardButton;
-    private Canvas canvas;
-    private Random random = new Random();
+    private final Canvas canvas;
+    private final Random random = new Random();
 
     public MainView() {
         this.stepForwardButton = new Button("Step Forward");
+        this.stepForwardButton.setOnAction(a -> {
+            colony.evolve();
+            drawColony();
+        });
+
         this.canvas = new Canvas(CANVAS_SIZE_IN_X, CANVAS_SIZE_IN_Y);
         this.getChildren().addAll(this.stepForwardButton, this.canvas);
 
@@ -53,11 +58,12 @@ public class MainView extends VBox {
             }
         }
 
-        g2d.setFill(LINE_COLOUR);
-        for (int x = 0; x < CANVAS_SIZE_IN_X; x += CELL_SIZE_IN_X) {
+        g2d.setStroke(LINE_COLOUR);
+        g2d.setLineWidth(0.1f);
+        for (int x = 0; x <= CANVAS_SIZE_IN_X; x += CELL_SIZE_IN_X) {
             g2d.strokeLine(x, 0, x, CANVAS_SIZE_IN_Y);
         }
-        for (int y = 0; y < CANVAS_SIZE_IN_Y; y += CELL_SIZE_IN_Y) {
+        for (int y = 0; y <= CANVAS_SIZE_IN_Y; y += CELL_SIZE_IN_Y) {
             g2d.strokeLine(0, y, CANVAS_SIZE_IN_X, y);
         }
     }
