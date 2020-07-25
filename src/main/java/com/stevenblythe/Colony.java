@@ -20,23 +20,6 @@ public class Colony {
         this.age = 0;
     }
 
-    public void showColony() {
-        System.out.println("Colony age: " + age);
-        for (int y = 0; y < height; y++) {
-            StringBuilder line = new StringBuilder("|");
-            for (int x = 0; x < width; x++) {
-                Cell cell = colony[x][y];
-                if (cell.isAlive()) {
-                    line.append("*");
-                } else {
-                    line.append(".");
-                }
-            }
-            line.append("|");
-            System.out.println(line);
-        }
-    }
-
     public void spawnCellAt(int x, int y) {
         if (cellIsInColony(x, y)) {
             Cell cell = colony[x][y];
@@ -49,7 +32,7 @@ public class Colony {
     public void killCellAt(int x, int y) {
         if (cellIsInColony(x, y)) {
             Cell cell = colony[x][y];
-            if (cell.isAlive()) {
+            if (cellIsAlive(x, y)) {
                 cell.kill();
             }
         }
