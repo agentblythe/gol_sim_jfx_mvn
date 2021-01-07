@@ -1,15 +1,10 @@
 package com.stevenblythe;
 
-import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.util.Random;
@@ -18,46 +13,21 @@ import static com.stevenblythe.Constants.*;
 
 public class MainView extends VBox {
     private Colony colony;
-    private Button stepForwardButton;
-    private RadioButton drawModeCreateRadioButton;
-    private RadioButton drawModeRemoveRadioButton;
-    private ToggleGroup toggleGroup;
-    private HBox controls;
+    private Toolbar toolbar;
     private final Canvas canvas;
     private final Random random = new Random();
     private DrawMode drawMode = DrawMode.CREATE;
 
     public MainView() {
-        this.controls = new HBox();
-        this.controls.setSpacing(10);
-        this.controls.setAlignment(Pos.CENTER_LEFT);
-        this.stepForwardButton = new Button("Step Forward");
-        this.stepForwardButton.setOnAction(a -> {
-            this.colony.evolve();
-            drawColony();
-        });
-
-        this.toggleGroup = new ToggleGroup();
-        this.drawModeCreateRadioButton = new RadioButton("Create");
-        this.drawModeCreateRadioButton.setSelected(true);
-        this.drawModeCreateRadioButton.setOnAction(a -> this.drawMode = DrawMode.CREATE);
-        this.drawModeRemoveRadioButton = new RadioButton("Remove");
-        this.drawModeRemoveRadioButton.setSelected(false);
-        this.drawModeRemoveRadioButton.setOnAction(a -> this.drawMode = DrawMode.REMOVE);
-        this.drawModeCreateRadioButton.setToggleGroup(this.toggleGroup);
-        this.drawModeRemoveRadioButton.setToggleGroup(this.toggleGroup);
-
-        this.controls.getChildren().addAll(
-                this.stepForwardButton,
-                this.drawModeCreateRadioButton,
-                this.drawModeRemoveRadioButton);
+        this.toolbar = new Toolbar(this);
 
         this.setOnKeyPressed(this::onKeyPressed);
 
         this.canvas = new Canvas(CANVAS_SIZE_IN_X, CANVAS_SIZE_IN_Y);
         this.canvas.setOnMouseClicked(this::handleCellMouseClick);
         this.canvas.setOnMouseDragged(this::handleCellMouseClick);
-        this.getChildren().addAll(this.controls, this.canvas);
+
+        this.getChildren().addAll(this.toolbar, this.canvas);
 
         spawnRandomColony();
 
@@ -66,11 +36,11 @@ public class MainView extends VBox {
 
     private void onKeyPressed(KeyEvent keyEvent) {
         if (keyEvent.getCode() == KeyCode.C) {
-            this.drawMode = DrawMode.CREATE;
-            this.drawModeCreateRadioButton.setSelected(true);
+            this.setDrawMode(DrawMode.CREATE);
+            this.toolbar.getDrawModeCreateRadioButton().setSelected(true);
         } else if (keyEvent.getCode() == KeyCode.R) {
-            this.drawMode = DrawMode.REMOVE;
-            this.drawModeRemoveRadioButton.setSelected(true);
+            this.setDrawMode(DrawMode.REMOVE);
+            this.toolbar.getDrawModeRemoveRadioButton().setSelected(true);
         }
     }
 
@@ -105,7 +75,7 @@ public class MainView extends VBox {
         }
     }
 
-    private void drawColony() {
+    public void drawColony() {
         GraphicsContext g2d = canvas.getGraphicsContext2D();
         g2d.setFill(BACKGROUND_COLOUR);
         g2d.fillRect(0, 0, CANVAS_SIZE_IN_X, CANVAS_SIZE_IN_Y);
@@ -129,5 +99,13 @@ public class MainView extends VBox {
         for (int y = 0; y <= CANVAS_SIZE_IN_Y; y += CELL_SIZE_IN_Y) {
             g2d.strokeLine(0, y, CANVAS_SIZE_IN_X, y);
         }
+    }
+
+    public Colony getColony() {
+        return colony;
+    }
+
+    public void setDrawMode(DrawMode drawMode) {
+        this.drawMode = drawMode;
     }
 }
